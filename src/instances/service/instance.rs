@@ -31,4 +31,6 @@ where
     fn repo_mut(&mut self) -> &mut Self::Repo {
         &mut self.repo
     }
+
+    // We can overwrite the default methods provided by the Service trait.
 }

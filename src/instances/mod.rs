@@ -8,6 +8,7 @@ use crate::instances::controller::instance::IpAddrController;
 use crate::instances::repository::instance::IpAddrRepository;
 use crate::instances::service::instance::IpAddrService;
 
+/// Composes the 3 layers together under the concept of a single module.
 pub struct IpModule {
     controller: IpAddrController<IpAddrService<IpAddrRepository>>,
 }
