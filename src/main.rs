@@ -3,10 +3,11 @@ mod traits;
 
 use std::net::{IpAddr, Ipv4Addr};
 
+use instances::controller::instance::IpAddrController;
 use instances::repository::instance::IpAddrRepository;
 use instances::service::instance::IpAddrService;
 
-use crate::traits::service::Service;
+use crate::traits::controller::Controller;
 
 fn main() {
     let respository = IpAddrRepository::new(Vec::from([
@@ -15,29 +16,36 @@ fn main() {
         IpAddr::V4(Ipv4Addr::new(192, 0, 0, 3)),
     ]));
 
-    let mut service = IpAddrService::new(respository);
+    let service = IpAddrService::new(respository);
+    let mut controller = IpAddrController::new(service);
 
-    let all = service.find_all();
-    println!("{:?}", all);
-
-    if let Ok(addr) = service.find_one(&IpAddr::V4(Ipv4Addr::new(192, 0, 0, 2))) {
-        println!("{:?}", addr);
+    // let all = controller.index();
+    if let Ok(result) = controller.index() {
+        println!("All Values: {:?}", result);
     }
 
-    if let Ok(addr) = service.update(
+    if let Ok(addr) = controller.show(&IpAddr::V4(Ipv4Addr::new(192, 0, 0, 2))) {
+        println!("Found: {:?}", addr);
+    }
+
+    if let Ok(addr) = controller.patch(
         &mut IpAddr::V4(Ipv4Addr::new(192, 0, 0, 2)),
         IpAddr::V4(Ipv4Addr::new(192, 0, 0, 102)),
     ) {
         println!("Updated: {:?}", addr);
     }
 
-    let all_after_update = service.find_all();
-    println!("After Update: {:?}", all_after_update);
+    if let Ok(all_after_update) = controller.index() {
+        println!("After Update: {:?}", all_after_update);
+    }
 
-    if let Ok(addr) = service.remove(&mut IpAddr::V4(Ipv4Addr::new(192, 0, 0, 1))) {
+    if let Ok(addr) = controller.delete(&mut IpAddr::V4(Ipv4Addr::new(192, 0, 0, 1))) {
         println!("Removed {:?}", addr);
     }
 
-    let all_after_removal = service.find_all();
-    println!("After Removal: {:?}", all_after_removal);
+    if let Ok(all_after_removal) = controller.index() {
+        println!("After Removal: {:?}", all_after_removal);
+    } else {
+        println!("Something went wrong")
+    }
 }
