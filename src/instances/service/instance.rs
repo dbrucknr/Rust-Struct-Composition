@@ -3,6 +3,9 @@ use std::net::IpAddr;
 use crate::traits::repository::Repository;
 use crate::traits::service::Service;
 
+use crate::instances::repository::errors::IpAddrRepoError;
+use crate::instances::service::errors::IpAddrServiceError;
+
 // Base IpAddrService Struct Defintion
 pub struct IpAddrService<R: Repository<Item = IpAddr>> {
     repo: R,
@@ -14,17 +17,18 @@ impl<R: Repository<Item = IpAddr>> IpAddrService<R> {
     }
 }
 // Implement Service Trait for IpAddrService
-impl<R: Repository<Item = IpAddr>> Service for IpAddrService<R> {
+impl<R> Service for IpAddrService<R>
+where
+    R: Repository<Item = IpAddr, RepoError = IpAddrRepoError>,
+{
     type Item = IpAddr;
     type Repo = R;
+    type ServiceError = IpAddrServiceError;
 
     fn repo(&self) -> &Self::Repo {
         &self.repo
     }
-
     fn repo_mut(&mut self) -> &mut Self::Repo {
         &mut self.repo
     }
-
-    // Can add service specific logic over-writing here...
 }
