@@ -3,8 +3,8 @@ mod traits;
 
 use std::net::{IpAddr, Ipv4Addr};
 
-use instances::repository::IpAddrRepository;
-use instances::service::IpAddrService;
+use instances::repository::instance::IpAddrRepository;
+use instances::service::instance::IpAddrService;
 
 use crate::traits::service::Service;
 

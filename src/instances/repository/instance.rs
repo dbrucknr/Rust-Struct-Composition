@@ -1,20 +1,7 @@
-use std::{error::Error, fmt, mem::replace, net::IpAddr};
+use std::{mem::replace, net::IpAddr};
 
+use crate::instances::repository::errors::IpAddrRepoError;
 use crate::traits::repository::Repository;
-
-// Repository Error Enum
-#[derive(Debug)]
-pub enum IpAddrRepoError {
-    IpAddrNotFound(IpAddr),
-}
-impl fmt::Display for IpAddrRepoError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            IpAddrRepoError::IpAddrNotFound(ip) => write!(f, "IP not found: {ip}"),
-        }
-    }
-}
-impl Error for IpAddrRepoError {}
 
 // Base IpAddrRepository Struct Definition
 pub struct IpAddrRepository {
